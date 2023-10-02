@@ -30,7 +30,9 @@ def page_not_found(e):
 
 # Register the blueprint
 app.register_blueprint(app_views)
+app.url_map.strict_slashes = False
 
 if __name__ == "__main__":
-    app.run(host=getenv("HBNB_API_HOST", "0.0.0.0"),
-            port=getenv("HBNB_API_PORT", 5000), threaded=True)
+host = os.getenv("HBNB_API_HOST", "0.0.0.0")
+    port = int(os.getenv("HBNB_API_PORT", 5000))
+    app.run(host=host, port=port, threaded=True)
