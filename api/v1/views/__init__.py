@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Creates a Blueprint instance.
+Creates a Blueprint instance for API version 1.
 """
 
 from flask import Blueprint
