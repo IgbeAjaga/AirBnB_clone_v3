@@ -8,11 +8,13 @@ from api.v1.views import app_views
 from models import storage
 from models.amenity import Amenity
 
-
 @app_views.route('/amenities', methods=['GET'], strict_slashes=False)
 def get_amenities():
     """
     Retrieves the list of all Amenity objects.
+
+    Returns:
+        JSON: A JSON response containing a list of Amenity objects.
     """
     amenities = [amenity.to_dict() for amenity in storage.all(Amenity).values()]
     return jsonify(amenities)
@@ -21,6 +23,12 @@ def get_amenities():
 def get_amenity(amenity_id):
     """
     Retrieves an Amenity object by ID.
+
+    Args:
+        amenity_id (str): The ID of the Amenity object to retrieve.
+
+    Returns:
+        JSON: A JSON response containing the Amenity object.
     """
     amenity = storage.get(Amenity, amenity_id)
     if amenity is None:
@@ -31,6 +39,12 @@ def get_amenity(amenity_id):
 def delete_amenity(amenity_id):
     """
     Deletes an Amenity object by ID.
+
+    Args:
+        amenity_id (str): The ID of the Amenity object to delete.
+
+    Returns:
+        JSON: An empty JSON response.
     """
     amenity = storage.get(Amenity, amenity_id)
     if amenity is None:
@@ -43,6 +57,9 @@ def delete_amenity(amenity_id):
 def create_amenity():
     """
     Creates a new Amenity object.
+
+    Returns:
+        JSON: A JSON response containing the newly created Amenity object.
     """
     data = request.get_json()
     if data is None:
@@ -57,6 +74,12 @@ def create_amenity():
 def update_amenity(amenity_id):
     """
     Updates an Amenity object by ID.
+
+    Args:
+        amenity_id (str): The ID of the Amenity object to update.
+
+    Returns:
+        JSON: A JSON response containing the updated Amenity object.
     """
     amenity = storage.get(Amenity, amenity_id)
     if amenity is None:
