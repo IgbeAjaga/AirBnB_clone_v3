@@ -3,18 +3,22 @@
 New view for City objects.
 """
 
-
 from flask import abort, jsonify, request
 from models.state import State
 from models.city import City
 from api.v1.views import app_views
 from models import storage
 
-
 @app_views.route('/states/<state_id>/cities', methods=['GET'], strict_slashes=False)
 def get_cities_by_state(state_id):
     """
     Retrieves the list of all City objects of a State.
+
+    Args:
+        state_id (str): The ID of the State for which to retrieve cities.
+
+    Returns:
+        JSON: A JSON response containing a list of City objects associated with the State.
     """
     state = storage.get(State, state_id)
     if state is None:
@@ -26,6 +30,12 @@ def get_cities_by_state(state_id):
 def get_city(city_id):
     """
     Retrieves a City object by ID.
+
+    Args:
+        city_id (str): The ID of the City object to retrieve.
+
+    Returns:
+        JSON: A JSON response containing the City object.
     """
     city = storage.get(City, city_id)
     if city is None:
@@ -36,6 +46,12 @@ def get_city(city_id):
 def delete_city(city_id):
     """
     Deletes a City object by ID.
+
+    Args:
+        city_id (str): The ID of the City object to delete.
+
+    Returns:
+        JSON: An empty JSON response.
     """
     city = storage.get(City, city_id)
     if city is None:
@@ -48,6 +64,12 @@ def delete_city(city_id):
 def create_city(state_id):
     """
     Creates a new City associated with a State.
+
+    Args:
+        state_id (str): The ID of the State to associate the new City with.
+
+    Returns:
+        JSON: A JSON response containing the newly created City object.
     """
     state = storage.get(State, state_id)
     if state is None:
@@ -66,6 +88,12 @@ def create_city(state_id):
 def update_city(city_id):
     """
     Updates a City object by ID.
+
+    Args:
+        city_id (str): The ID of the City object to update.
+
+    Returns:
+        JSON: A JSON response containing the updated City object.
     """
     city = storage.get(City, city_id)
     if city is None:
