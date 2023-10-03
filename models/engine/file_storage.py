@@ -11,86 +11,117 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+import hashlib  # Added hashlib for password hashing
 
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-       	"Place": Place, "Review": Review, "State": State, "User": User}
+           "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class FileStorage:
-	"""serializes instances to a JSON file & deserializes back to instances"""
+    """
+    Serializes instances to a JSON file & deserializes back to instances.
 
-	# string - path to the JSON file
-	__file_path = "file.json"
-	# dictionary - empty but will store all objects by <class name>.id
-	__objects = {}
+    This class provides methods to serialize Python objects (instances of classes)
+    to a JSON file and to deserialize JSON data from the file back into Python objects.
+    """
 
-	def all(self, cls=None):
-    	"""returns the dictionary __objects"""
-    	if cls is not None:
-        	new_dict = {}
-        	for key, value in self.__objects.items():
-            	if cls == value.__class__ or cls == value.__class__.__name__:
-                	new_dict[key] = value
-        	return new_dict
-    	return self.__objects
+    # string - path to the JSON file
+    __file_path = "file.json"
+    # dictionary - empty but will store all objects by <class name>.id
+    __objects = {}
 
-	def new(self, obj):
-    	"""sets in __objects the obj with key <obj class name>.id"""
-    	if obj is not None:
-        	key = obj.__class__.__name__ + "." + obj.id
-        	self.__objects[key] = obj
+    def all(self, cls=None):
+        """
+        Returns a dictionary of all objects or objects of a specific class.
 
-	def save(self):
-    	"""Serialize __objects to the JSON file (path: __file_path)"""
-    	new_dict = {}
-    	for key, value in self.__objects.items():
-        new_dict[key] = value.to_dict()
-        if isinstance(value, User) and hasattr(value, 'password') and value.password:
-            new_dict[key]['password'] = hashlib.md5(value.password.encode()).hexdigest()
+        Args:
+            cls (class, optional): The class of objects to filter by.
+                If None, returns all objects.
 
-	def reload(self):
-    	"""deserializes the JSON file to __objects"""
-    	try:
-        	with open(self.__file_path, 'r') as f:
-            	jo = json.load(f)
-        	for key in jo:
-            	self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
-    	except:
-        	pass
+        Returns:
+            dict: A dictionary where keys are in the format 'ClassName.id'
+                and values are the objects themselves.
+        """
+        if cls is not None:
+            new_dict = {}
+            for key, value in self.__objects.items():
+                if cls == value.__class__ or cls == value.__class__.__name__:
+                    new_dict[key] = value
+            return new_dict
+        return self.__objects
 
-	def delete(self, obj=None):
-    	"""delete obj from __objects if it’s inside"""
-    	if obj is not None:
-        	key = obj.__class__.__name__ + '.' + obj.id
-        	if key in self.__objects:
-            	del self.__objects[key]
+    def new(self, obj):
+        """
+        Adds the object to the dictionary of objects.
 
-	def close(self):
-    	"""call reload() method for deserializing the JSON file to objects"""
-    	self.reload()
+        Args:
+            obj: The object to be added to the dictionary.
+        """
+        if obj is not None:
+            key = obj.__class__.__name__ + "." + obj.id
+            self.__objects[key] = obj
 
-	def get(self, cls, id):
-    	"""object to get"""
-    	if cls and id:
-        	takeObj = '{}.{}'.format(cls, id)
-        	everyObj = self.all(cls)
-        	return everyObj.get(takeObj)
-    	else:
-        	return None
+    def save(self):
+        """Serializes __objects to the JSON file (path: __file_path)."""
+        new_dict = {}
+        for key, value in self.__objects.items():
+            new_dict[key] = value.to_dict()
+            if isinstance(value, User) and hasattr(value, 'password') and value.password:
+                new_dict[key]['password'] = hashlib.md5(value.password.encode()).hexdigest()
 
-	def count(self, cls=None):
-    	"""class that is (optional)"""
-    	return (len(self.all(cls)))
+    def reload(self):
+        """Deserializes the JSON file to __objects."""
+        try:
+            with open(self.__file_path, 'r') as f:
+                jo = json.load(f)
+            for key in jo:
+                self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
+        except:
+            pass
 
-def get(self, cls, id):
-	"""Retrieve one object"""
-	key = "{}.{}".format(cls.__name__, id)
-	return self.__objects.get(key, None)
+    def delete(self, obj=None):
+        """
+        Deletes an object from __objects if it's inside.
 
-def count(self, cls=None):
-	"""Count the number of objects in storage"""
-	if cls:
-    	return len([obj for obj in self.__objects.values() if obj.__class__ == cls])
-	else:
-    	# If cls is not provided, count all objects
-    	return len(self.__objects)
+        Args:
+            obj (object, optional): The object to be deleted from the dictionary.
+        """
+        if obj is not None:
+            key = obj.__class__.__name__ + '.' + obj.id
+            if key in self.__objects:
+                del self.__objects[key]
+
+    def close(self):
+        """Calls reload() method for deserializing the JSON file to objects."""
+        self.reload()
+
+    def get(self, cls, id):
+        """
+        Retrieves one object by its class and ID.
+
+        Args:
+            cls (class): The class of the object to retrieve.
+            id (str): The ID of the object to retrieve.
+
+        Returns:
+            object: The retrieved object, or None if not found.
+        """
+        if cls and id:
+            takeObj = '{}.{}'.format(cls, id)
+            everyObj = self.all(cls)
+            return everyObj.get(takeObj)
+        else:
+            return None
+
+    def count(self, cls=None):
+        """
+        Counts the number of objects in the storage.
+
+        Args:
+            cls (class, optional): The class of objects to count.
+                If None, counts all classes.
+
+        Returns:
+            int: The number of objects in storage.
+        """
+        return len(self.all(cls))
