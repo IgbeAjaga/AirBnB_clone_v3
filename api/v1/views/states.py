@@ -8,11 +8,13 @@ from api.v1.views import app_views
 from models import storage
 from models.state import State
 
-
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 def get_states():
     """
     Retrieves the list of all State objects.
+
+    Returns:
+        JSON: A JSON response containing a list of State objects.
     """
     states = [state.to_dict() for state in storage.all(State).values()]
     return jsonify(states)
@@ -21,6 +23,12 @@ def get_states():
 def get_state(state_id):
     """
     Retrieves a State object by ID.
+
+    Args:
+        state_id (str): The ID of the State object to retrieve.
+
+    Returns:
+        JSON: A JSON response containing the State object.
     """
     state = storage.get(State, state_id)
     if state is None:
@@ -31,6 +39,12 @@ def get_state(state_id):
 def delete_state(state_id):
     """
     Deletes a State object by ID.
+
+    Args:
+        state_id (str): The ID of the State object to delete.
+
+    Returns:
+        JSON: An empty JSON response.
     """
     state = storage.get(State, state_id)
     if state is None:
@@ -43,6 +57,9 @@ def delete_state(state_id):
 def create_state():
     """
     Creates a new State.
+
+    Returns:
+        JSON: A JSON response containing the newly created State object.
     """
     data = request.get_json()
     if data is None:
@@ -57,6 +74,12 @@ def create_state():
 def update_state(state_id):
     """
     Updates a State object by ID.
+
+    Args:
+        state_id (str): The ID of the State object to update.
+
+    Returns:
+        JSON: A JSON response containing the updated State object.
     """
     state = storage.get(State, state_id)
     if state is None:
