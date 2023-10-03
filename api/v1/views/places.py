@@ -10,11 +10,16 @@ from models.city import City
 from models.place import Place
 from models.user import User
 
-
 @app_views.route('/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
 def get_city_places(city_id):
     """
     Retrieves the list of all Place objects of a City.
+
+    Args:
+        city_id (str): The ID of the City to retrieve Place objects from.
+
+    Returns:
+        JSON: A JSON response containing a list of Place objects.
     """
     city = storage.get(City, city_id)
     if city is None:
@@ -26,6 +31,12 @@ def get_city_places(city_id):
 def get_place(place_id):
     """
     Retrieves a Place object by ID.
+
+    Args:
+        place_id (str): The ID of the Place object to retrieve.
+
+    Returns:
+        JSON: A JSON response containing the Place object.
     """
     place = storage.get(Place, place_id)
     if place is None:
@@ -36,6 +47,12 @@ def get_place(place_id):
 def delete_place(place_id):
     """
     Deletes a Place object by ID.
+
+    Args:
+        place_id (str): The ID of the Place object to delete.
+
+    Returns:
+        JSON: An empty JSON response.
     """
     place = storage.get(Place, place_id)
     if place is None:
@@ -48,6 +65,12 @@ def delete_place(place_id):
 def create_place(city_id):
     """
     Creates a new Place object in a City.
+
+    Args:
+        city_id (str): The ID of the City in which to create the Place.
+
+    Returns:
+        JSON: A JSON response containing the newly created Place object.
     """
     city = storage.get(City, city_id)
     if city is None:
@@ -72,6 +95,12 @@ def create_place(city_id):
 def update_place(place_id):
     """
     Updates a Place object by ID.
+
+    Args:
+        place_id (str): The ID of the Place object to update.
+
+    Returns:
+        JSON: A JSON response containing the updated Place object.
     """
     place = storage.get(Place, place_id)
     if place is None:
@@ -89,6 +118,9 @@ def update_place(place_id):
 def places_search():
     """
     Search for Place objects based on criteria in the request body.
+
+    Returns:
+        JSON: A JSON response containing a list of matching Place objects.
     """
     data = request.get_json()
 

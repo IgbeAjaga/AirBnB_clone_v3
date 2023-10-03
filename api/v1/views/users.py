@@ -3,17 +3,18 @@
 New view for User objects.
 """
 
-
 from flask import jsonify, request, abort
 from api.v1.views import app_views
 from models import storage
 from models.user import User
 
-
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
 def get_users():
     """
     Retrieves the list of all User objects.
+
+    Returns:
+        JSON: A JSON response containing a list of User objects.
     """
     users = [user.to_dict() for user in storage.all(User).values()]
     return jsonify(users)
@@ -22,6 +23,12 @@ def get_users():
 def get_user(user_id):
     """
     Retrieves a User object by ID.
+
+    Args:
+        user_id (str): The ID of the User object to retrieve.
+
+    Returns:
+        JSON: A JSON response containing the User object.
     """
     user = storage.get(User, user_id)
     if user is None:
@@ -32,6 +39,12 @@ def get_user(user_id):
 def delete_user(user_id):
     """
     Deletes a User object by ID.
+
+    Args:
+        user_id (str): The ID of the User object to delete.
+
+    Returns:
+        JSON: An empty JSON response.
     """
     user = storage.get(User, user_id)
     if user is None:
@@ -44,6 +57,9 @@ def delete_user(user_id):
 def create_user():
     """
     Creates a new User object.
+
+    Returns:
+        JSON: A JSON response containing the newly created User object.
     """
     data = request.get_json()
     if data is None:
@@ -60,6 +76,12 @@ def create_user():
 def update_user(user_id):
     """
     Updates a User object by ID.
+
+    Args:
+        user_id (str): The ID of the User object to update.
+
+    Returns:
+        JSON: A JSON response containing the updated User object.
     """
     user = storage.get(User, user_id)
     if user is None:

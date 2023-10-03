@@ -6,16 +6,20 @@ New view for places_review objects.
 from flask import jsonify, request, abort
 from api.v1.views import app_views
 from models import storage
-from flask import abort, jsonify, request
 from models.place import Place
 from models.review import Review
 from models.user import User
-
 
 @app_views.route('/places/<place_id>/reviews', methods=['GET'], strict_slashes=False)
 def get_place_reviews(place_id):
     """
     Retrieves the list of all Review objects of a Place.
+
+    Args:
+        place_id (str): The ID of the Place to retrieve Review objects from.
+
+    Returns:
+        JSON: A JSON response containing a list of Review objects.
     """
     place = storage.get(Place, place_id)
     if place is None:
@@ -27,6 +31,12 @@ def get_place_reviews(place_id):
 def get_review(review_id):
     """
     Retrieves a Review object by ID.
+
+    Args:
+        review_id (str): The ID of the Review object to retrieve.
+
+    Returns:
+        JSON: A JSON response containing the Review object.
     """
     review = storage.get(Review, review_id)
     if review is None:
@@ -37,6 +47,12 @@ def get_review(review_id):
 def delete_review(review_id):
     """
     Deletes a Review object by ID.
+
+    Args:
+        review_id (str): The ID of the Review object to delete.
+
+    Returns:
+        JSON: An empty JSON response.
     """
     review = storage.get(Review, review_id)
     if review is None:
@@ -49,6 +65,12 @@ def delete_review(review_id):
 def create_review(place_id):
     """
     Creates a new Review object for a Place.
+
+    Args:
+        place_id (str): The ID of the Place in which to create the Review.
+
+    Returns:
+        JSON: A JSON response containing the newly created Review object.
     """
     place = storage.get(Place, place_id)
     if place is None:
@@ -73,6 +95,12 @@ def create_review(place_id):
 def update_review(review_id):
     """
     Updates a Review object by ID.
+
+    Args:
+        review_id (str): The ID of the Review object to update.
+
+    Returns:
+        JSON: A JSON response containing the updated Review object.
     """
     review = storage.get(Review, review_id)
     if review is None:
