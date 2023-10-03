@@ -3,9 +3,13 @@
 New view for City objects.
 """
 
-from flask import jsonify, request, abort
+
+from flask import abort, jsonify, request
+from models.state import State
+from models.city import City
 from api.v1.views import app_views
-from models import storage, State, City
+from models import storage
+
 
 @app_views.route('/states/<state_id>/cities', methods=['GET'], strict_slashes=False)
 def get_cities_by_state(state_id):

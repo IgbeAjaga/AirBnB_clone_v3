@@ -3,9 +3,13 @@
 New view for the link between Place objects and Amenity objects.
 """
 
-from api.v1.views import app_views
+
 from flask import jsonify, abort, request
-from models import storage, Place, Amenity
+from models.place import Place
+from models.amenity import Amenity
+from models import storage
+from api.v1.views import app_views
+
 
 @app_views.route('/places/<place_id>/amenities', methods=['GET'], strict_slashes=False)
 def get_place_amenities(place_id):
